@@ -14,23 +14,22 @@ function createPet(ag, ki, na) {
     age: ag,
     kind: ki,
     name: na
-  }
+  };
 }
 
-function writeFile(ps, p) {
+function writeFile(ps, pe) {
   fs.writeFile(petsPath, JSON.stringify(ps), (writeErr) => {
     if (writeErr) throw writeErr;
 
-    console.log(p);
+    console.log(pe);
   });
 }
 
 if (cmd === 'read' || cmd === 'destroy') {
-
   fs.readFile(petsPath, 'utf8', (err, data) => {
     if (err) throw err;
 
-    let pets = JSON.parse(data);
+    const pets = JSON.parse(data);
     const index = process.argv[3];
 
     if (cmd === 'read') {
@@ -47,28 +46,26 @@ if (cmd === 'read' || cmd === 'destroy') {
         process.exit(1);
       }
       const splicedPet = pets[index];
+
       pets.splice(index, 1);
       writeFile(pets, splicedPet);
     }
-
-
   });
 } else if (cmd === 'create' || cmd === 'update') {
   fs.readFile(petsPath, 'utf8', (readErr, data) => {
     if (readErr) throw readErr;
 
     let i = 3;
-
-    if(cmd === 'update') {
-      var indexNumber = parseInt(process.argv[i]);
-      i++;
+    let indexNumber;
+    if (cmd === 'update') {
+      indexNumber = parseInt(process.argv[i]);
+      i += 1;
     }
 
     const pets = JSON.parse(data);
     const age = parseInt(process.argv[i]);
     const kind = process.argv[i + 1];
     const name = process.argv[i + 2];
-
 
     if (cmd === 'create' && (!age || !kind || !name)) {
       console.error(`Usage: ${node} ${file} ${cmd} AGE KIND NAME`);
@@ -89,9 +86,7 @@ if (cmd === 'read' || cmd === 'destroy') {
       }
       pets[indexNumber] = pet;
     }
-
     writeFile(pets, pet);
-
   });
 } else {
   console.error(`Usage: ${node} ${file} [read | create | update | destroy]`);
