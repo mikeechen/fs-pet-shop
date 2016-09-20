@@ -1,4 +1,7 @@
-#! /usr/local/bin/node
+#!/usr/local/bin/node
+
+/* eslint no-console: 0 */
+
 'use strict';
 
 const fs = require('fs');
@@ -9,18 +12,9 @@ const node = path.basename(process.argv[0]);
 const file = path.basename(process.argv[1]);
 const cmd = process.argv[2];
 
-function createPet(ag, ki, na) {
-  return {
-    age: ag,
-    kind: ki,
-    name: na
-  };
-}
-
 function writeFile(ps, pe) {
   fs.writeFile(petsPath, JSON.stringify(ps), (writeErr) => {
     if (writeErr) throw writeErr;
-
     console.log(pe);
   });
 }
@@ -28,14 +22,13 @@ function writeFile(ps, pe) {
 if (cmd === 'read' || cmd === 'destroy') {
   fs.readFile(petsPath, 'utf8', (err, data) => {
     if (err) throw err;
-
     const pets = JSON.parse(data);
-    const index = process.argv[3];
+    const index = Number(process.argv[3]);
 
     if (cmd === 'read') {
-      if (!index) {
+      if (isNaN(index)) {
         console.log(pets);
-      } else if (index < pets.length) {
+      } else if (index >= 0 && index < pets.length) {
         console.log(pets[index]);
       } else {
         console.error(`There are only ${pets.length} pets! Read starts at 0!`);
@@ -54,14 +47,13 @@ if (cmd === 'read' || cmd === 'destroy') {
 } else if (cmd === 'create' || cmd === 'update') {
   fs.readFile(petsPath, 'utf8', (readErr, data) => {
     if (readErr) throw readErr;
-
     let i = 3;
     let indexNumber;
+
     if (cmd === 'update') {
       indexNumber = parseInt(process.argv[i]);
       i += 1;
     }
-
     const pets = JSON.parse(data);
     const age = parseInt(process.argv[i]);
     const kind = process.argv[i + 1];
@@ -74,10 +66,9 @@ if (cmd === 'read' || cmd === 'destroy') {
       console.error(`Usage: ${node} ${file} ${cmd} INDEX AGE KIND NAME`);
       process.exit(1);
     }
+    const pet = { age, kind, name };
 
-    const pet = createPet(age, kind, name);
-
-    if (cmd === 'create'){
+    if (cmd === 'create') {
       pets.push(pet);
     } else {
       if (indexNumber >= pets.length) {
