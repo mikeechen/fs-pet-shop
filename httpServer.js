@@ -14,7 +14,8 @@ const server = http.createServer((req, res) => {
       let indexNumber;
 
       if (petRegExp.test(req.url)) {
-       indexNumber = parseInt(req.url.substring(req.url.lastIndexOf('/') + 1));
+      //  indexNumber = parseInt(req.url.substring(req.url.lastIndexOf('/') + 1));
+       indexNumber = parseInt(req.url.match(petRegExp)[1]);
       }
 
       if (err) {
@@ -39,20 +40,19 @@ const server = http.createServer((req, res) => {
     } else if (req.method === 'POST' && req.url === '/pets') {
       let obj = {};
 
-      req.on('data', function(stuff) {
-        const tempobj = JSON.parse(stuff.toString());
+      req.on('data', function(chunk) {
+        const tempobj = JSON.parse(chunk.toString());
         obj.age = parseInt(tempobj.age);
         obj.kind = tempobj.kind;
         obj.name = tempobj.name;
       }).on('end', () => {
-        if (!isNaN(obj.age) && obj.name !== undefined && obj.kind !== undefined) {
+        if (!isNaN(obj.age) && (obj.name !== undefined || obj.name !== '') && (obj.kind !== undefined || obj.kind !== '')) {
           if (err) {
             console.error(err.stack);
             res.statusCode = 500;
             res.setHeader('Content-Type', 'text/plain');
             return res.end('Internal Server Error');
           }
-          console.log(obj);
           pets.push(obj);
           fs.writeFile(petsPath, JSON.stringify(pets), (writeErr) => {
             if (writeErr) {
