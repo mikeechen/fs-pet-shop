@@ -45,14 +45,14 @@ const server = http.createServer((req, res) => {
         obj.kind = tempobj.kind;
         obj.name = tempobj.name;
       }).on('end', () => {
-        if (!isNaN(obj.age) && obj.name !== '' && obj.kind !== '') {
+        if (!isNaN(obj.age) && obj.name !== undefined && obj.kind !== undefined) {
           if (err) {
             console.error(err.stack);
             res.statusCode = 500;
             res.setHeader('Content-Type', 'text/plain');
             return res.end('Internal Server Error');
           }
-
+          console.log(obj);
           pets.push(obj);
           fs.writeFile(petsPath, JSON.stringify(pets), (writeErr) => {
             if (writeErr) {
