@@ -36,7 +36,7 @@ const server = http.createServer((req, res) => {
         res.end('Not Found');
       }
 
-    } else if (req.method === 'POST' && req.url.indexOf('/pets') !== -1) {
+    } else if (req.method === 'POST' && req.url === '/pets') {
       let obj = {};
 
       req.on('data', function(stuff) {
