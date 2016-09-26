@@ -62,31 +62,6 @@ fs.readFile(petsPath, 'utf8', (err, data) => {
     }
   });
 
-  app.put('/pets/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    const pet = {
-      age: parseInt(req.body.age),
-      kind: req.body.kind,
-      name: req.body.name
-    };
-    if (id < 0 || id > pets.length) {
-      return res.sendStatus(400);
-    }
-    if (!isNaN(pet.age) && (pet.name !== undefined || pet.name !== '') && (pet.kind !== undefined || pet.kind !== '')) {
-      pets[id] = pet;
-      writeFile(pets, pet, res);
-    } else {
-      return res.sendStatus(400);
-    }
-  });
-
-  app.delete('/pets/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    if () {
-
-    }
-  });
-
   app.use((req, res) => {
     res.sendStatus(404);
   });
