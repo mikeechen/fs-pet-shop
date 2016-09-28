@@ -17,7 +17,7 @@ function writeFile(petswr, petwr, reswr) {
 
       return reswr.sendStatus(500);
     }
-    res.send(petwr);
+    reswr.send(petwr);
   });
 }
 
