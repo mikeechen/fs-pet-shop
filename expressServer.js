@@ -24,12 +24,14 @@ function writeFile(petswr, petwr, reswr) {
 fs.readFile(petsPath, 'utf8', (err, data) => {
   const pets = JSON.parse(data);
 
-  if (err) {
-    console.error(err.stack);
-    app.use((req, res) => {
+  app.use((req, res, next) => {
+    if (err) {
+      console.error(err.stack);
       res.sendStatus(500);
-    });
-  }
+    } else {
+      next();
+    }
+  })
 
   app.use(bodyParser.json());
 
